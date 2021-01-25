@@ -30,24 +30,11 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringReader;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
-import org.json.XML;
-import org.json.XMLParserConfiguration;
-import org.json.XMLXsiTypeConverter;
+import org.json.*;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -1067,5 +1054,17 @@ public class XMLTest {
             });
             fail("Expected to be unable to modify the config");
         } catch (Exception ignored) { }
+    }
+
+
+    // Milestone 2
+    @Test
+    public void testXMLToJsonPath() throws FileNotFoundException {
+
+        FileReader reader = new FileReader("C:\\Users\\farza\\Desktop\\262P\\262P-Project\\Milestone2-Temp\\JSON-java\\src\\test\\resources\\small-sample.xml");
+        JSONPointer jp = new JSONPointer("/author");
+        JSONObject jo = XML.toJSONObject(reader, jp);
+        System.out.println(jo);
+
     }
 }
