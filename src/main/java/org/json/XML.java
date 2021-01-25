@@ -745,30 +745,41 @@ public class XML {
         return toString(object, tagName, XMLParserConfiguration.ORIGINAL);
     }
 
-    // Milestone 2
+    // Milestone 2   Part 1
     public static JSONObject toJSONObject(Reader reader, JSONPointer path) {
         String[] pathArrTemp = path.toString().split("/");
         String[] pathArr = Arrays.copyOfRange(pathArrTemp, 1, pathArrTemp.length);
         String lastElem = pathArr[pathArr.length - 1];
-//        int lastElemInt = Integer.parseInt(lastElem);
-
+        boolean isArray = true;
+        try {
+            int lastElemInt = Integer.parseInt(lastElem);
+        } catch (NumberFormatException e) {
+            isArray = false;
+        }
         JSONObject jo = new JSONObject();
         XMLTokener x = new XMLTokener(reader);
-//        x.skipPast(">");
-        while (x.more()) {
-            if (x.nextContent().toString().endsWith(">")) {
+//        System.out.println(x.nextContent());
+//        parse(x, jo, null, XMLParserConfiguration.ORIGINAL);
+        if (!isArray) {
+            while (x.more()) {
+                x.skipPast("<");
                 if (!x.end()) {
-                    x.nextContent();
-                    // Printing the keys
-//                    System.out.println(x.nextToken());
-                    System.out.println("FIRST LOCATION   " + x);
                     if (x.nextToken().toString().equals(lastElem)) {
-                        System.out.println("SECOND LOCATION   " + x);
+                        x.next();
+                        System.out.println(x.nextContent());
 //                        parse(x, jo, null, XMLParserConfiguration.ORIGINAL);
                     }
                 }
             }
+        } else {
+
         }
+        return jo;
+    }
+
+    // Milestone 2  Part 2
+//    public static JSONObject toJSONObject(Reader reader, JSONPointer path, JSONObject replacement) {
+//
         return jo;
     }
 
