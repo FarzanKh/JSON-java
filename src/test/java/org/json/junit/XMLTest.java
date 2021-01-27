@@ -1056,7 +1056,6 @@ public class XMLTest {
         } catch (Exception ignored) { }
     }
 
-
     // Milestone 2 Task 1 Tests
 
     // without array
