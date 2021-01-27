@@ -30,24 +30,11 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringReader;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
-import org.json.XML;
-import org.json.XMLParserConfiguration;
-import org.json.XMLXsiTypeConverter;
+import org.json.*;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -1067,5 +1054,171 @@ public class XMLTest {
             });
             fail("Expected to be unable to modify the config");
         } catch (Exception ignored) { }
+    }
+
+
+    // Milestone 2 Task 1 Tests
+
+    // without array
+    @Test
+    public void testXMLToJsonPathMiddleSubobjectWithoutArray() throws FileNotFoundException {
+        FileReader reader = new FileReader("sample.xml");
+        JSONPointer jp = new JSONPointer("/catalog/book");
+        String expectedStr =
+                "  {\n" +
+                "    \"book\": {\n" +
+                "      \"author\": \"Gambardella, Matthew\",\n" +
+                "      \"title\": \"XML Developer's Guide\",\n" +
+                "      \"genre\": \"Computer\",\n" +
+                "      \"price\": 44.95,\n" +
+                "      \"publish_date\": \"2000-10-01\",\n" +
+                "      \"description\": \"An in-depth look at creating\"\n" +
+                "    }\n" +
+                "  }";
+        JSONObject expectedJsonObject = new JSONObject(expectedStr);
+        JSONObject jo = XML.toJSONObject(reader, jp,false);
+        Util.compareActualVsExpectedJsonObjects(jo,expectedJsonObject);
+    }
+
+    @Test
+    public void testXMLToJsonPathLastLevelSubobjectWithoutArray() throws FileNotFoundException {
+        FileReader reader = new FileReader("sample.xml");
+        JSONPointer jp = new JSONPointer("/catalog/book/title");
+        String expectedStr = "  {\n" +
+                "    \"title\": \"XML Developer's Guide\" }";
+        JSONObject expectedJsonObject = new JSONObject(expectedStr);
+        JSONObject jo = XML.toJSONObject(reader, jp,false);
+        Util.compareActualVsExpectedJsonObjects(jo,expectedJsonObject);
+    }
+
+
+    // with array
+    @Test
+    public void testXMLToJsonPathMiddleSubobjectWithArray() throws FileNotFoundException {
+        FileReader reader = new FileReader("array.xml");
+        JSONPointer jp = new JSONPointer("/catalog/book/0");
+        String expectedStr = "{\n" +
+        "    \"book\": \n" +
+                "      {\n" +
+                "        \"author\": \"Gambardella, Matthew\",\n" +
+                "        \"title\": \"XML Developer's Guide\",\n" +
+                "        \"genre\": \"Computer\",\n" +
+                "        \"price\": 44.95,\n" +
+                "        \"publish_date\": \"2000-10-01\",\n" +
+                "        \"description\": \"An in-depth look at creating applications\"\n" +
+                "      }\n" +
+                "      }";
+        JSONObject expectedJsonObject = new JSONObject(expectedStr);
+        JSONObject jo = XML.toJSONObject(reader, jp,true);
+        Util.compareActualVsExpectedJsonObjects(jo,expectedJsonObject);
+    }
+
+    @Test
+    public void testXMLToJsonPathLastLevelSubobjectWithArray() throws FileNotFoundException {
+        FileReader reader = new FileReader("array.xml");
+        JSONPointer jp = new JSONPointer("/catalog/book/0/description");
+        String expectedStr = "  {\n" +
+                "    \"description\": \"An in-depth look at creating applications\" }";;
+        JSONObject expectedJsonObject = new JSONObject(expectedStr);
+        JSONObject jo = XML.toJSONObject(reader, jp,true);
+        Util.compareActualVsExpectedJsonObjects(jo,expectedJsonObject);
+    }
+
+    @Test
+    public void testXMLToJsonPathExceptionWithArray() throws FileNotFoundException {
+        FileReader reader = new FileReader("array.xml");
+        JSONPointer jp = new JSONPointer("/catalog/book/0/invalid");
+        try {
+            XML.toJSONObject(reader,jp,true);
+            fail("Expecting a JSONException");
+        } catch (JSONException e) {
+            assertEquals("Expecting an exception message",
+                    "The provided key doesn't exist in the json object",
+                    e.getMessage());
+        }
+    }
+
+    // Milestone 2 Task 2 Tests
+
+    @Test
+    public void replaceLastLevelJsonObject() throws FileNotFoundException {
+
+        FileReader reader = new FileReader("sample.xml");
+        JSONPointer jp = new JSONPointer("/catalog/book/genre");
+        JSONObject tempJo = new JSONObject();
+        tempJo.put("Hello", "World");
+        String expectedStr = "{\n" +
+                "  \"catalog\": {\n" +
+                "    \"book\": {\n" +
+                "      \"author\": \"Gambardella, Matthew\",\n" +
+                "      \"title\": \"XML Developer's Guide\",\n" +
+                "      \"genre\": {\"Hello\" : \"World\"},\n" +
+                "      \"price\": 44.95,\n" +
+                "      \"publish_date\": \"2000-10-01\",\n" +
+                "      \"description\": \"An in-depth look at creating\"\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
+        JSONObject expectedJsonObject = new JSONObject(expectedStr);
+        JSONObject jo = XML.toJSONObject(reader, jp, tempJo);
+        Util.compareActualVsExpectedJsonObjects(jo,expectedJsonObject);
+    }
+
+    @Test
+    public void replaceMiddleJsonObjectWithArray() throws FileNotFoundException {
+        FileReader reader = new FileReader("array.xml");
+        JSONPointer jp = new JSONPointer("/catalog/book/0");
+        JSONObject tempJo = new JSONObject();
+        tempJo.put("Hello", "World");
+        String expectedStr = "{\n" +
+                "  \"catalog\": {\n" +
+                "    \"book\": [\n" +
+                "      {\n" +
+                "        \"author\": \"Ralls, Kim\",\n" +
+                "        \"title\": \"Midnight Rain\",\n" +
+                "        \"genre\": \"Fantasy\",\n" +
+                "        \"price\": 5.95,\n" +
+                "        \"publish_date\": \"2000-12-16\",\n" +
+                "        \"description\": \"A former architect battles corporate zombies\"\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"author\": \"Corets, Eva\",\n" +
+                "        \"title\": \"Maeve Ascendant\",\n" +
+                "        \"genre\": \"Fantasy\",\n" +
+                "        \"price\": 5.95,\n" +
+                "        \"publish_date\": \"2000-11-17\",\n" +
+                "        \"description\": \"After the collapse of a nanotechnology\"\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"author\": \"Corets, Eva\",\n" +
+                "        \"title\": \"Oberon's Legacy\",\n" +
+                "        \"genre\": \"Fantasy\",\n" +
+                "        \"price\": 5.95,\n" +
+                "        \"publish_date\": \"2001-03-10\",\n" +
+                "        \"description\": \"In post-apocalypse England, the mysterious\"\n" +
+                "      },\n" +
+                "        {\"Hello\": \"World\"}\n" +
+                "    ]\n" +
+                "  }\n" +
+                "}";
+        JSONObject expectedJsonObject = new JSONObject(expectedStr);
+        JSONObject jo = XML.toJSONObject(reader, jp, tempJo);
+        Util.compareActualVsExpectedJsonObjects(jo,expectedJsonObject);
+    }
+
+    @Test
+    public void replaceWithArrayJSONException() throws FileNotFoundException {
+        FileReader reader = new FileReader("array.xml");
+        JSONPointer jp = new JSONPointer("/invalid/book/catalog");
+        JSONObject tempJo = new JSONObject();
+        tempJo.put("Hello", "World");
+        try {
+            XML.toJSONObject(reader,jp,tempJo);
+            fail("Expecting a JSONException");
+        } catch (JSONException e) {
+            assertEquals("Expecting an exception message",
+                    "The provided key doesn't exist in the json object",
+                    e.getMessage());
+        }
     }
 }
