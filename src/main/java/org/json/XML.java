@@ -1096,44 +1096,6 @@ public class XML {
         return toString(object, tagName, XMLParserConfiguration.ORIGINAL);
     }
 
-    // Milestone 2   Part 1
-    public static JSONObject toJSONObject(Reader reader, JSONPointer path) {
-        String[] pathArrTemp = path.toString().split("/");
-        String[] pathArr = Arrays.copyOfRange(pathArrTemp, 1, pathArrTemp.length);
-        String lastElem = pathArr[pathArr.length - 1];
-        boolean isArray = true;
-        try {
-            int lastElemInt = Integer.parseInt(lastElem);
-        } catch (NumberFormatException e) {
-            isArray = false;
-        }
-        JSONObject jo = new JSONObject();
-        XMLTokener x = new XMLTokener(reader);
-//        System.out.println(x.nextContent());
-//        parse(x, jo, null, XMLParserConfiguration.ORIGINAL);
-        if (!isArray) {
-            while (x.more()) {
-                x.skipPast("<");
-                if (!x.end()) {
-                    if (x.nextToken().toString().equals(lastElem)) {
-                        x.next();
-                        System.out.println(x.nextContent());
-//                        parse(x, jo, null, XMLParserConfiguration.ORIGINAL);
-                    }
-                }
-            }
-        } else {
-
-        }
-        return jo;
-    }
-
-    // Milestone 2  Part 2
-//    public static JSONObject toJSONObject(Reader reader, JSONPointer path, JSONObject replacement) {
-//
-        return jo;
-    }
-
 
     /**
      * Convert a JSONObject into a well-formed, element-normal XML string.
