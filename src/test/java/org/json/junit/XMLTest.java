@@ -1220,4 +1220,198 @@ public class XMLTest {
                     e.getMessage());
         }
     }
+    
+    // Milestone 3 Tests
+
+    @Test
+    public void addPrefixTestWithoutJSONArray() throws FileNotFoundException {
+        FileReader reader = new FileReader("sample.xml");
+        UnaryOperator<String> transform = s -> "swe262p_" + s;
+        String expectedStr = "{\n" +
+                "   \"swe262p_catalog\":{\n" +
+                "      \"swe262p_book\":{\n" +
+                "         \"swe262p_author\":\"Gambardella, Matthew\",\n" +
+                "         \"swe262p_publish_date\":\"2000-10-01\",\n" +
+                "         \"swe262p_genre\":\"Computer\",\n" +
+                "         \"swe262p_description\":\"An in-depth look at creating\",\n" +
+                "         \"swe262p_title\":\"XML Developer's Guide\",\n" +
+                "         \"swe262p_price\":44.95\n" +
+                "      }\n" +
+                "   }\n" +
+                "}";
+        JSONObject expectedJsonObject = new JSONObject(expectedStr);
+        JSONObject jo = XML.toJSONObject(reader,transform);
+        Util.compareActualVsExpectedJsonObjects(jo,expectedJsonObject);
+    }
+
+    @Test
+    public void addPrefixTestWithJSONArray() throws FileNotFoundException {
+        FileReader reader = new FileReader("books.xml");
+        UnaryOperator<String> transform = s -> "swe262p_" + s;
+        String expectedStr = "{\n" +
+                "   \"swe262p_catalog\":{\n" +
+                "      \"swe262p_book\":[\n" +
+                "         {\n" +
+                "            \"swe262p_author\":\"Gambardella, Matthew\",\n" +
+                "            \"swe262p_id\":\"bk101\",\n" +
+                "            \"swe262p_publish_date\":\"2000-10-01\",\n" +
+                "            \"swe262p_genre\":\"Computer\",\n" +
+                "            \"swe262p_description\":\"An in-depth look at creating applications\\n            with XML.\",\n" +
+                "            \"swe262p_title\":\"XML Developer's Guide\",\n" +
+                "            \"swe262p_price\":44.95\n" +
+                "         },\n" +
+                "         {\n" +
+                "            \"swe262p_author\":\"Ralls, Kim\",\n" +
+                "            \"swe262p_id\":\"bk102\",\n" +
+                "            \"swe262p_publish_date\":\"2000-12-16\",\n" +
+                "            \"swe262p_genre\":\"Fantasy\",\n" +
+                "            \"swe262p_description\":\"A former architect battles corporate zombies,\\n            an evil sorceress, and her own childhood to become queen\\n            of the world.\",\n" +
+                "            \"swe262p_title\":\"Midnight Rain\",\n" +
+                "            \"swe262p_price\":5.95\n" +
+                "         },\n" +
+                "         {\n" +
+                "            \"swe262p_author\":\"Corets, Eva\",\n" +
+                "            \"swe262p_id\":\"bk103\",\n" +
+                "            \"swe262p_publish_date\":\"2000-11-17\",\n" +
+                "            \"swe262p_genre\":\"Fantasy\",\n" +
+                "            \"swe262p_description\":\"After the collapse of a nanotechnology\\n            society in England, the young survivors lay the\\n            foundation for a new society.\",\n" +
+                "            \"swe262p_title\":\"Maeve Ascendant\",\n" +
+                "            \"swe262p_price\":5.95\n" +
+                "         },\n" +
+                "         {\n" +
+                "            \"swe262p_author\":\"Corets, Eva\",\n" +
+                "            \"swe262p_id\":\"bk104\",\n" +
+                "            \"swe262p_publish_date\":\"2001-03-10\",\n" +
+                "            \"swe262p_genre\":\"Fantasy\",\n" +
+                "            \"swe262p_description\":\"In post-apocalypse England, the mysterious\\n            agent known only as Oberon helps to create a new life\\n            for the inhabitants of London. Sequel to Maeve\\n            Ascendant.\",\n" +
+                "            \"swe262p_title\":\"Oberon's Legacy\",\n" +
+                "            \"swe262p_price\":5.95\n" +
+                "         },\n" +
+                "         {\n" +
+                "            \"swe262p_author\":\"Corets, Eva\",\n" +
+                "            \"swe262p_id\":\"bk105\",\n" +
+                "            \"swe262p_publish_date\":\"2001-09-10\",\n" +
+                "            \"swe262p_genre\":\"Fantasy\",\n" +
+                "            \"swe262p_description\":\"The two daughters of Maeve, half-sisters,\\n            battle one another for control of England. Sequel to\\n            Oberon's Legacy.\",\n" +
+                "            \"swe262p_title\":\"The Sundered Grail\",\n" +
+                "            \"swe262p_price\":5.95\n" +
+                "         },\n" +
+                "         {\n" +
+                "            \"swe262p_author\":\"Randall, Cynthia\",\n" +
+                "            \"swe262p_id\":\"bk106\",\n" +
+                "            \"swe262p_publish_date\":\"2000-09-02\",\n" +
+                "            \"swe262p_genre\":\"Romance\",\n" +
+                "            \"swe262p_description\":\"When Carla meets Paul at an ornithology\\n            conference, tempers fly as feathers get ruffled.\",\n" +
+                "            \"swe262p_title\":\"Lover Birds\",\n" +
+                "            \"swe262p_price\":4.95\n" +
+                "         },\n" +
+                "         {\n" +
+                "            \"swe262p_author\":\"Thurman, Paula\",\n" +
+                "            \"swe262p_id\":\"bk107\",\n" +
+                "            \"swe262p_publish_date\":\"2000-11-02\",\n" +
+                "            \"swe262p_genre\":\"Romance\",\n" +
+                "            \"swe262p_description\":\"A deep sea diver finds true love twenty\\n            thousand leagues beneath the sea.\",\n" +
+                "            \"swe262p_title\":\"Splish Splash\",\n" +
+                "            \"swe262p_price\":4.95\n" +
+                "         },\n" +
+                "         {\n" +
+                "            \"swe262p_author\":\"Knorr, Stefan\",\n" +
+                "            \"swe262p_id\":\"bk108\",\n" +
+                "            \"swe262p_publish_date\":\"2000-12-06\",\n" +
+                "            \"swe262p_genre\":\"Horror\",\n" +
+                "            \"swe262p_description\":\"An anthology of horror stories about roaches,\\n            centipedes, scorpions  and other insects.\",\n" +
+                "            \"swe262p_title\":\"Creepy Crawlies\",\n" +
+                "            \"swe262p_price\":4.95\n" +
+                "         },\n" +
+                "         {\n" +
+                "            \"swe262p_author\":\"Kress, Peter\",\n" +
+                "            \"swe262p_id\":\"bk109\",\n" +
+                "            \"swe262p_publish_date\":\"2000-11-02\",\n" +
+                "            \"swe262p_genre\":\"Science Fiction\",\n" +
+                "            \"swe262p_description\":\"After an inadvertant trip through a Heisenberg\\n            Uncertainty Device, James Salway discovers the problems\\n            of being quantum.\",\n" +
+                "            \"swe262p_title\":\"Paradox Lost\",\n" +
+                "            \"swe262p_price\":6.95\n" +
+                "         },\n" +
+                "         {\n" +
+                "            \"swe262p_author\":\"O'Brien, Tim\",\n" +
+                "            \"swe262p_id\":\"bk110\",\n" +
+                "            \"swe262p_publish_date\":\"2000-12-09\",\n" +
+                "            \"swe262p_genre\":\"Computer\",\n" +
+                "            \"swe262p_description\":\"Microsoft's .NET initiative is explored in\\n            detail in this deep programmer's reference.\",\n" +
+                "            \"swe262p_title\":\"Microsoft .NET: The Programming Bible\",\n" +
+                "            \"swe262p_price\":36.95\n" +
+                "         },\n" +
+                "         {\n" +
+                "            \"swe262p_author\":\"O'Brien, Tim\",\n" +
+                "            \"swe262p_id\":\"bk111\",\n" +
+                "            \"swe262p_publish_date\":\"2000-12-01\",\n" +
+                "            \"swe262p_genre\":\"Computer\",\n" +
+                "            \"swe262p_description\":\"The Microsoft MSXML3 parser is covered in\\n            detail, with attention to XML DOM interfaces, XSLT processing,\\n            SAX and more.\",\n" +
+                "            \"swe262p_title\":\"MSXML3: A Comprehensive Guide\",\n" +
+                "            \"swe262p_price\":36.95\n" +
+                "         },\n" +
+                "         {\n" +
+                "            \"swe262p_author\":\"Galos, Mike\",\n" +
+                "            \"swe262p_id\":\"bk112\",\n" +
+                "            \"swe262p_publish_date\":\"2001-04-16\",\n" +
+                "            \"swe262p_genre\":\"Computer\",\n" +
+                "            \"swe262p_description\":\"Microsoft Visual Studio 7 is explored in depth,\\n            looking at how Visual Basic, Visual C++, C#, and ASP+ are\\n            integrated into a comprehensive development\\n            environment.\",\n" +
+                "            \"swe262p_title\":\"Visual Studio 7: A Comprehensive Guide\",\n" +
+                "            \"swe262p_price\":49.95\n" +
+                "         }\n" +
+                "      ]\n" +
+                "   }\n" +
+                "}";
+        JSONObject expectedJsonObject = new JSONObject(expectedStr);
+        JSONObject jo = XML.toJSONObject(reader,transform);
+        Util.compareActualVsExpectedJsonObjects(jo,expectedJsonObject);
+    }
+
+    @Test
+    public void addPrefixWithCDataTest() throws FileNotFoundException {
+        FileReader reader = new FileReader("withcdata.xml");
+        UnaryOperator<String> transform = s -> "swe262p_" + s;
+        String expectedStr = "{\n" +
+                "   \"swe262p_breakfast_menu\":{\n" +
+                "      \"swe262p_food\":[\n" +
+                "         {\n" +
+                "            \"swe262p_name\":\"Belgian Waffles\",\n" +
+                "            \"swe262p_calories\":650,\n" +
+                "            \"swe262p_description\":\"\\n    Our famous Belgian Waffles with plenty of real maple syrup. 5 < 6\\n  \",\n" +
+                "            \"swe262p_price\":\"$5.95\"\n" +
+                "         },\n" +
+                "         {\n" +
+                "            \"swe262p_name\":\"French Toast\",\n" +
+                "            \"swe262p_calories\":600,\n" +
+                "            \"swe262p_description\":\"Thick slices made from our homemade sourdough bread\",\n" +
+                "            \"swe262p_price\":\"$4.50\"\n" +
+                "         }\n" +
+                "      ]\n" +
+                "   }\n" +
+                "}";
+        JSONObject expectedJsonObject = new JSONObject(expectedStr);
+        JSONObject jo = XML.toJSONObject(reader,transform);
+        Util.compareActualVsExpectedJsonObjects(jo,expectedJsonObject);
+    }
+
+    @Test
+    public void addPrefixWithLongReplacementKeyTest() throws FileNotFoundException{
+        FileReader reader = new FileReader("sample.xml");
+        UnaryOperator<String> transform = s -> "00000000000000111111111111112222222222222233333333333344444444444444445555555555556666666666667777777777777" + s;
+        String expectedStr = "{\n" +
+                "   \"00000000000000111111111111112222222222222233333333333344444444444444445555555555556666666666667777777777777catalog\":{\n" +
+                "      \"00000000000000111111111111112222222222222233333333333344444444444444445555555555556666666666667777777777777book\":{\n" +
+                "         \"00000000000000111111111111112222222222222233333333333344444444444444445555555555556666666666667777777777777price\":44.95,\n" +
+                "         \"00000000000000111111111111112222222222222233333333333344444444444444445555555555556666666666667777777777777publish_date\":\"2000-10-01\",\n" +
+                "         \"00000000000000111111111111112222222222222233333333333344444444444444445555555555556666666666667777777777777description\":\"An in-depth look at creating\",\n" +
+                "         \"00000000000000111111111111112222222222222233333333333344444444444444445555555555556666666666667777777777777title\":\"XML Developer's Guide\",\n" +
+                "         \"00000000000000111111111111112222222222222233333333333344444444444444445555555555556666666666667777777777777author\":\"Gambardella, Matthew\",\n" +
+                "         \"00000000000000111111111111112222222222222233333333333344444444444444445555555555556666666666667777777777777genre\":\"Computer\"\n" +
+                "      }\n" +
+                "   }\n" +
+                "}";
+        JSONObject expectedJsonObject = new JSONObject(expectedStr);
+        JSONObject jo = XML.toJSONObject(reader,transform);
+        Util.compareActualVsExpectedJsonObjects(jo,expectedJsonObject);
+    }
 }
