@@ -52,6 +52,14 @@ public class XMLTest {
     @Rule
     public TemporaryFolder testFolder = new TemporaryFolder();
 
+    private static String apply(String s) {
+        return "swe262p_" + s;
+    }
+
+    private static String apply2(String s) {
+        return "00000000000000111111111111112222222222222233333333333344444444444444445555555555556666666666667777777777777" + s;
+    }
+    
     /**
      * JSONObject from a null XML string.
      * Expects a NullPointerException
@@ -1226,7 +1234,7 @@ public class XMLTest {
     @Test
     public void addPrefixTestWithoutJSONArray() throws FileNotFoundException {
         FileReader reader = new FileReader("sample.xml");
-        UnaryOperator<String> transform = s -> "swe262p_" + s;
+        UnaryOperator<String> transform = XMLTest::apply;
         String expectedStr = "{\n" +
                 "   \"swe262p_catalog\":{\n" +
                 "      \"swe262p_book\":{\n" +
@@ -1247,7 +1255,7 @@ public class XMLTest {
     @Test
     public void addPrefixTestWithJSONArray() throws FileNotFoundException {
         FileReader reader = new FileReader("books.xml");
-        UnaryOperator<String> transform = s -> "swe262p_" + s;
+        UnaryOperator<String> transform = XMLTest::apply;
         String expectedStr = "{\n" +
                 "   \"swe262p_catalog\":{\n" +
                 "      \"swe262p_book\":[\n" +
@@ -1370,7 +1378,7 @@ public class XMLTest {
     @Test
     public void addPrefixWithCDataTest() throws FileNotFoundException {
         FileReader reader = new FileReader("withcdata.xml");
-        UnaryOperator<String> transform = s -> "swe262p_" + s;
+        UnaryOperator<String> transform = XMLTest::apply;
         String expectedStr = "{\n" +
                 "   \"swe262p_breakfast_menu\":{\n" +
                 "      \"swe262p_food\":[\n" +
@@ -1397,7 +1405,7 @@ public class XMLTest {
     @Test
     public void addPrefixWithLongReplacementKeyTest() throws FileNotFoundException{
         FileReader reader = new FileReader("sample.xml");
-        UnaryOperator<String> transform = s -> "00000000000000111111111111112222222222222233333333333344444444444444445555555555556666666666667777777777777" + s;
+        UnaryOperator<String> transform = XMLTest::apply2;
         String expectedStr = "{\n" +
                 "   \"00000000000000111111111111112222222222222233333333333344444444444444445555555555556666666666667777777777777catalog\":{\n" +
                 "      \"00000000000000111111111111112222222222222233333333333344444444444444445555555555556666666666667777777777777book\":{\n" +
