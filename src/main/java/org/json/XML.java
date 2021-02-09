@@ -24,8 +24,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import com.sun.tools.javac.util.ArrayUtils;
-
 import java.io.Reader;
 import java.io.StringReader;
 import java.lang.reflect.Method;
