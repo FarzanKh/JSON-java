@@ -3230,4 +3230,48 @@ public class JSONObjectTest {
         assertTrue("expected jsonObject.length() == 0", jsonObject.length() == 0); //Check if its length is 0
         jsonObject.getInt("key1"); //Should throws org.json.JSONException: JSONObject["asd"] not found
     }
+    
+    // Milestone 4 Tests
+
+    // auxillary function to convert a list to string
+    public String listToString(List<JSONObject.simpleJSONNode> list) {
+        String result = list.stream()
+                .map(n -> String.valueOf(n))
+                .collect(Collectors.joining());
+        return result;
+    }
+
+    @Test
+    public void simplestStreamTest() throws Exception{
+        FileReader reader = new FileReader("simple.xml");
+        JSONObject jo = XML.toJSONObject(reader);
+
+        List<JSONObject.simpleJSONNode> list = jo.toStream().collect(Collectors.toList());
+        List<JSONObject.simpleJSONNode> expectedList = new ArrayList<>();
+        JSONObject expectedValue = new JSONObject("{\n" +
+                "    \"title\": \"XML Developer's Guide\"\n" +
+                "  }");
+        expectedList.add(new JSONObject.simpleJSONNode("book",expectedValue));
+        assertEquals(listToString(list),listToString(expectedList));
+    }
+
+    @Test
+    public void moreComplexStreamTest() throws Exception{
+        FileReader reader = new FileReader("moreComplex.xml");
+        JSONObject jo = XML.toJSONObject(reader);
+
+        List<JSONObject.simpleJSONNode> list = jo.toStream().collect(Collectors.toList());
+        List<JSONObject.simpleJSONNode> expectedList = new ArrayList<>();
+        JSONObject expectedValue= new JSONObject("{\n" +
+                "  \"author\": \"Gambardella, Matthew\",\n" +
+                "  \"title\": \"XML Developer's Guide\",\n" +
+                "  \"genre\": \"Computer\",\n" +
+                "  \"price\": 44.95,\n" +
+                "  \"publish_date\": \"2000-10-01\",\n" +
+                "  \"description\": \"An in-depth look at creating\"\n" +
+                "}");
+        expectedList.add(new JSONObject.simpleJSONNode("book",expectedValue));
+
+        assertEquals(listToString(list),listToString(expectedList));
+    }
 }
