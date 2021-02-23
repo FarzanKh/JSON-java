@@ -910,6 +910,62 @@ public class JSONObject {
         }
         return this;
     }
+ 
+     // Milestone 4: toStream method
+    
+    // new node class to hold one key and one value 
+    public static class simpleJSONNode{
+        private String key;
+        private Object value;
+
+        public simpleJSONNode(String key, Object value){
+            this.key = key;
+            this.value = value;
+        }
+
+        public String getKey() {
+            return key;
+        }
+        public Object getValue(){
+            return value;
+        }
+
+        public String toString(){
+            return key + value;
+        }
+    }
+
+    // node iterator that creates nodes from key set from JSONObject
+    class simpleNodeGen implements Iterator<simpleJSONNode>{
+        private Iterator<String> previous;
+        private JSONObject jo;
+
+        public simpleNodeGen(Iterator<String> p, JSONObject json){
+            previous = p;
+            jo = json;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return previous.hasNext();
+        }
+
+        @Override
+        public simpleJSONNode next() {
+            String key = previous.next();
+            simpleJSONNode node = new simpleJSONNode(key,jo.get(key));
+            return node;
+        }
+    }
+
+    // streaming method that uses previous iterator to create a stream of simpleJSONNode
+    public Stream<simpleJSONNode> toStream(){
+        // from: https://www.geeksforgeeks.org/10-ways-to-create-a-stream-in-java/
+        simpleNodeGen nodeGen = new simpleNodeGen(keys(),this);
+        Spliterator<simpleJSONNode> spliterator = Spliterators.spliteratorUnknownSize(nodeGen,Spliterator.NONNULL);
+        Stream<simpleJSONNode> stream = StreamSupport.stream(spliterator,false);
+        return stream;
+    }
 
     /**
      * Determine if the value associated with the key is <code>null</code> or if there is no
