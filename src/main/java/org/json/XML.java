@@ -24,11 +24,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.function.Function;
@@ -1441,5 +1444,21 @@ public class XML {
                 : (string.length() == 0) ? "<" + tagName + "/>" : "<" + tagName
                 + ">" + string + "</" + tagName + ">";
 
+    }
+
+    public static void readFileStream_wordStart(String filePath, String filter) throws IOException {
+        Pattern pattern = Pattern.compile("\\s+");
+        Files.lines(Paths.get(filePath))
+                .flatMap(pattern::splitAsStream)
+                .filter(x -> x.startsWith(filter))
+                .forEach(System.out::println);
+    }
+
+    public static void readFileStream_wordEnd(String filePath, String filter) throws IOException {
+        Pattern pattern = Pattern.compile("\\s+");
+        Files.lines(Paths.get(filePath))
+                .flatMap(pattern::splitAsStream)
+                .filter(x -> x.endsWith(filter))
+                .forEach(System.out::println);
     }
 }
