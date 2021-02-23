@@ -1423,4 +1423,17 @@ public class XMLTest {
         JSONObject jo = XML.toJSONObject(reader,transform);
         Util.compareActualVsExpectedJsonObjects(jo,expectedJsonObject);
     }
+
+    // MILESTONE 4
+    @Test
+    public void readFileStream_wordStart() throws IOException {
+        String filePath = "books.xml";
+        XML.readFileStream_wordStart(filePath, "b");
+    }
+
+    @Test
+    public void readFileStream_wordEnd() throws IOException {
+        String filePath = "books.xml";
+        XML.readFileStream_wordEnd(filePath, "e");
+    }
 }

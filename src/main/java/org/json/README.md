@@ -21,7 +21,7 @@ Furthermore, we added `readFileStream_wordEnd` which works similar to `readFileS
 - Navigate to the top-level project folder in terminal (should be `/JSON-java`)
 - Run the command `gradle clean build test`. Make sure gradle is installed.
 - All testing should be done. Testing XML files are included in the top-level of the project and are automatically used by unit tests.
-- Note: The tests were created on a Mac, so there may be errors with line separators with the tests if running in an IDE.
+- Note: The tests were created on a Mac, so there may be errors with line separators with the tests if running in an IDE. If so, make sure line separation is set to LF (not CRLF).
 
 
 **Project Milestone 3**
