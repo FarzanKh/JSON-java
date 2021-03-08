@@ -1,3 +1,22 @@
+## Project Milestone 5
+
+#### (One new method and one new class is added to XML.java)
+
+For this milestone, one new methods is added that asynchronously converts an XML file to a JSONObject, then runs a user-defined function in the case of either success or error. 
+
+### The method
+
+The method takes in 3 parameters: 
+1) `Reader reader`: a reader containing the XML file
+2) `Consumer<JSONObject> consumer`: a consumer function to run in the case of success.
+3) `Consumer<Exception> exception`: a consumer function to run in the case of error.
+
+The method makes use of a `Callable` class that is used by `ExecutorService` to return a future. After the completion or error of running the callable, the corresponding function is run.
+
+###Tests (XMLTest.java)
+1) `TestXMLConcurrent`: Given an XML file, test whether successfully converted to JSONObject and assert that it is equal to expected JSONObject.
+2) `TestXMLConcurrentError`: Given an invalid XML file (`exception.xml`), assert that exception is properly triggered.
+
 ## Project Milestone 4
 
 #### (One new method is added to JSONObject.java and two new methods are added to XML.java. Moreover, Test cases are in XMLTest.java)

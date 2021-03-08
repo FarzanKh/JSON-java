@@ -1463,7 +1463,29 @@ public class XML {
                 .filter(x -> x.endsWith(filter))
                 .forEach(System.out::println);
     }
-    
+
+    /**
+     * Convert a well-formed (but not necessarily valid) XML into a
+     * JSONObject asynchronously and run a user-defined function in the
+     * case of either success or error.
+     * Some information may be lost in this transformation because
+     * JSON is a data format and XML is a document format. XML uses elements,
+     * attributes, and content text, while JSON uses unordered collections of
+     * name/value pairs and arrays of values. JSON does not does not like to
+     * distinguish between elements and attributes. Sequences of similar
+     * elements are represented as JSONArrays. Content text may be placed in a
+     * "content" member. Comments, prologs, DTDs, and <pre>{@code
+     * &lt;[ [ ]]>}</pre>
+     * are ignored.
+     *
+     * All values are converted as strings, for 1, 01, 29.0 will not be coerced to
+     * numbers but will instead be the exact value as seen in the XML document.
+     *
+     * @param reader The XML source reader.
+     * @param consumer Consumer function to run in the case of successful JSONObject conversion.
+     * @param exception Consumer function to run in the case of error.
+     */
+
     public static void toJSONObject(Reader reader, Consumer<JSONObject> consumer, Consumer<Exception> exception) {
         ExecutorService service = Executors.newFixedThreadPool(5);
         Future<JSONObject> future = service.submit(new Task(reader));
