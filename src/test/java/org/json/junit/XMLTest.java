@@ -1436,7 +1436,8 @@ public class XMLTest {
         String filePath = "books.xml";
         XML.readFileStream_wordEnd(filePath, "e");
     }
-    
+
+    // MILESTONE 5
     
     @Test
     public void TestXMLConcurrent() throws FileNotFoundException {
@@ -1455,13 +1456,13 @@ public class XMLTest {
                 "}";
 
         JSONObject expectedJsonObject = new JSONObject(expectedStr);
-        XML.toJsonObject(reader, (JSONObject jo) -> Util.compareActualVsExpectedJsonObjects(jo, expectedJsonObject), (Exception e) -> e.getMessage());
+        XML.toJSONObject(reader, (JSONObject jo) -> Util.compareActualVsExpectedJsonObjects(jo, expectedJsonObject), (Exception e) -> e.getMessage());
     }
 
 
     @Test
-    public void TestXMLConcurrent2() throws FileNotFoundException {
+    public void TestXMLConcurrentError() throws FileNotFoundException {
         FileReader reader = new FileReader("exception.xml");
-        XML.toJsonObject(reader, (JSONObject jo) -> System.out.println(""), (Exception e) -> assertEquals((e.getMessage()), "org.json.JSONException: Mismatched gen and genre at 137 [character 32 line 5]"));
+        XML.toJSONObject(reader, (JSONObject jo) -> System.out.println(""), (Exception e) -> assertEquals("org.json.JSONException: Mismatched gen and genre at 97 [character 98 line 1]", e.getMessage()));
     }
 }

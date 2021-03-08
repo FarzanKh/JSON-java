@@ -34,6 +34,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.concurrent.*;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
@@ -1462,11 +1464,11 @@ public class XML {
                 .forEach(System.out::println);
     }
     
-        public static void toJsonObject(Reader reader, Consumer<JSONObject> consumer, Consumer<Exception> exception) {
+    public static void toJSONObject(Reader reader, Consumer<JSONObject> consumer, Consumer<Exception> exception) {
         ExecutorService service = Executors.newFixedThreadPool(5);
         Future<JSONObject> future = service.submit(new Task(reader));
 
-        JSONObject result = null;
+        JSONObject result;
         try {
             result = future.get();
         } catch (InterruptedException | ExecutionException e) {
@@ -1474,17 +1476,16 @@ public class XML {
             return;
         }
         consumer.accept(result);
-//        return result;
     }
 
-        static class Task implements Callable<JSONObject> {
-            Reader reader;
-            public Task(Reader reader) {
-                this.reader = reader;
-            }
-            @Override
-            public JSONObject call() throws Exception {
-                return toJSONObject(reader);
-            }
+    static class Task implements Callable<JSONObject> {
+        Reader reader;
+        public Task(Reader reader) {
+            this.reader = reader;
         }
+        @Override
+        public JSONObject call() throws Exception {
+            return toJSONObject(reader);
+        }
+    }
 }
