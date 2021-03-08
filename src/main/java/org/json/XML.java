@@ -1461,4 +1461,30 @@ public class XML {
                 .filter(x -> x.endsWith(filter))
                 .forEach(System.out::println);
     }
+    
+        public static void toJsonObject(Reader reader, Consumer<JSONObject> consumer, Consumer<Exception> exception) {
+        ExecutorService service = Executors.newFixedThreadPool(5);
+        Future<JSONObject> future = service.submit(new Task(reader));
+
+        JSONObject result = null;
+        try {
+            result = future.get();
+        } catch (InterruptedException | ExecutionException e) {
+            exception.accept(e);
+            return;
+        }
+        consumer.accept(result);
+//        return result;
+    }
+
+        static class Task implements Callable<JSONObject> {
+            Reader reader;
+            public Task(Reader reader) {
+                this.reader = reader;
+            }
+            @Override
+            public JSONObject call() throws Exception {
+                return toJSONObject(reader);
+            }
+        }
 }
