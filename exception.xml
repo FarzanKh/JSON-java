@@ -1,0 +1,10 @@
+<catalog>
+    <book>
+        <author>Gambardella, Matthew
+        <title>XML Developer's Guidetitle>
+            <gen>Computer</genre>
+            <price>44.95</price>
+            <publish_date2000-10-01</publish_date>
+        <description>An in-depth look at creating</descriptio
+    </book>
+</catalog>
