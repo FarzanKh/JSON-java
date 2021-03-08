@@ -30,14 +30,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringReader;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -1067,5 +1060,32 @@ public class XMLTest {
             });
             fail("Expected to be unable to modify the config");
         } catch (Exception ignored) { }
+    }
+
+    @Test
+    public void TestXMLConcurrent() throws FileNotFoundException {
+        FileReader reader = new FileReader("sample.xml");
+        String expectedStr = "{\n" +
+                "  \"catalog\": {\n" +
+                "    \"book\": {\n" +
+                "      \"author\": \"Gambardella, Matthew\",\n" +
+                "      \"title\": \"XML Developer's Guide\",\n" +
+                "      \"genre\": \"Computer\",\n" +
+                "      \"price\": 44.95,\n" +
+                "      \"publish_date\": \"2000-10-01\",\n" +
+                "      \"description\": \"An in-depth look at creating\"\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
+
+        JSONObject expectedJsonObject = new JSONObject(expectedStr);
+        XML.toJsonObject(reader, (JSONObject jo) -> Util.compareActualVsExpectedJsonObjects(jo, expectedJsonObject), (Exception e) -> e.getMessage());
+    }
+
+
+    @Test
+    public void TestXMLConcurrent2() throws FileNotFoundException {
+        FileReader reader = new FileReader("exception.xml");
+        XML.toJsonObject(reader, (JSONObject jo) -> System.out.println(""), (Exception e) -> assertEquals((e.getMessage()), "org.json.JSONException: Mismatched gen and genre at 137 [character 32 line 5]"));
     }
 }

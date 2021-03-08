@@ -30,6 +30,8 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Iterator;
+import java.util.concurrent.*;
+import java.util.function.Consumer;
 
 
 /**
@@ -708,6 +710,32 @@ public class XML {
     public static JSONObject toJSONObject(String string, XMLParserConfiguration config) throws JSONException {
         return toJSONObject(new StringReader(string), config);
     }
+
+    public static void toJsonObject(Reader reader, Consumer<JSONObject> consumer, Consumer<Exception> exception) {
+        ExecutorService service = Executors.newFixedThreadPool(5);
+        Future<JSONObject> future = service.submit(new Task(reader));
+
+        JSONObject result = null;
+        try {
+            result = future.get();
+        } catch (InterruptedException | ExecutionException e) {
+            exception.accept(e);
+            return;
+        }
+        consumer.accept(result);
+//        return result;
+    }
+
+        static class Task implements Callable<JSONObject> {
+            Reader reader;
+            public Task(Reader reader) {
+                this.reader = reader;
+            }
+            @Override
+            public JSONObject call() throws Exception {
+                return toJSONObject(reader);
+            }
+        }
 
     /**
      * Convert a JSONObject into a well-formed, element-normal XML string.
